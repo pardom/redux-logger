@@ -1,6 +1,10 @@
 package redux.logger
 
 import org.jetbrains.spek.api.Spek
+import redux.Middleware
+import redux.Store
+import redux.logger.LoggerMiddlewareTest.Actions.Dec
+import redux.logger.LoggerMiddlewareTest.Actions.Inc
 
 /*
  * Copyright (C) 2016 Michael Pardo
@@ -20,8 +24,30 @@ import org.jetbrains.spek.api.Spek
 
 class LoggerMiddlewareTest : Spek({
 
-	describe("LoggerMiddleware") {
+    val reducer = { state: Int, action: Any ->
+        when (action) {
+            is Inc -> state + 1
+            is Dec -> state - 1
+            else -> state
+        }
+    }
 
-	}
+    describe("LoggerMiddleware") {
 
-})
+        describe("create") {
+
+            it("creates a logger middleware") {
+                // TODO: This test is mostly for function type checking at this point.
+                val store = Store.create(reducer, 0, Middleware.apply(LoggerMiddleware.create()))
+            }
+
+        }
+
+    }
+
+}) {
+    sealed class Actions {
+        class Inc : Actions()
+        class Dec : Actions()
+    }
+}
